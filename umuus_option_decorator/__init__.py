@@ -52,6 +52,7 @@ import sys
 import functools
 import addict
 import toolz
+import inspect
 __version__ = '0.1'
 __url__ = 'https://github.com/junmakii/umuus-option-decorator'
 __author__ = 'Jun Makii'
