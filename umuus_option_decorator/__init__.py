@@ -37,6 +37,29 @@ Example
     def run(x, options):
         assert x == options.x
 
+----
+
+    In [2]: @umuus_option_decorator.decorator() 
+       ...: def f(x): print(x)
+
+    In [3]: f(1)
+    1
+
+    In [4]: f(x=1)
+    1
+
+    In [5]: f(options=dict(x=1))
+    1
+
+    In [6]: @umuus_option_decorator.decorator() 
+       ...: def f(x, options): print(x, options)
+
+    In [7]: f(options=dict(x=1))
+    1 {'x': 1}
+
+    In [8]: f(1)
+    1 {}
+
 Authors
 -------
 
@@ -90,13 +113,17 @@ def decorator(fn, **default_kw):
     @functools.wraps(fn)
     def wrapper(*args, **kwargs):
         try:
-            options = addict.Dict(default_kw, **dict(kwargs))
+            _options = functools.reduce(lambda a, b: (a.update(b), a)[-1], (
+                default_kw,
+                kwargs,
+                kwargs.get('options', {}),
+            ), addict.Dict())
             return fn(
                 *args, **{
                     key: value
                     for key, value in (
-                        [] + list(dict(options=options).items()) +
-                        list(options.items()))
+                        [] + list(dict(options=_options).items()) +
+                        list(_options.items()))
                     if key in (spec.args[len(args):]) or spec.varkw
                 })
         except Exception as err:
