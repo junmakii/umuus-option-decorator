@@ -105,21 +105,28 @@ def decorator(fn, **default_kw):
     def wrapper(*args, **kwargs):
         try:
             _args = dict(zip(spec.args[:len(args)], args))
-            _options = functools.reduce(lambda a, b: (a.update(b), a)[-1], (
+            _filter_kw = lambda kw: {
+                key: value
+                for key, value in kw.items()
+                if key in spec.args
+                and key not in spec.args[:len(args)]
+                or spec.varkw
+            }
+            addict.Dict()
+            _to_kw = (
+                lambda kwds, initial_kw=addict.Dict():
+                functools.reduce(
+                    lambda a, b: (a.update(addict.Dict(b)), a)[-1],
+                    map(_filter_kw, kwds),
+                    initial_kw))
+            _options = _to_kw([
                 default_kw,
                 _args,
                 kwargs,
-                kwargs.get('options', {}),
-            ), addict.Dict())
-            return fn(
-                *args, **{
-                    key: value
-                    for key, value in (
-                        [] + list(dict(options=_options).items()) +
-                        list(_options.items()) + list(_args.items()))
-                    if key in spec.args and key not in spec.args[:len(args)]
-                    or spec.varkw
-                })
+                kwargs.get('options', addict.Dict()),
+            ])
+            _options = _to_kw([_options, addict.Dict(options=_options)])
+            return fn(**_options)
         except Exception as err:
             raise err
 
