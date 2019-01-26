@@ -24,7 +24,7 @@ setup(
     keywords=[],
     license='GPLv3',
     scripts=[],
-    install_requires=['toolz==0.9.0', 'addict==2.2.0'],
+    install_requires=['toolz>=0.9.0', 'addict>=2.2.0'],
     dependency_links=[],
     classifiers=[],
     entry_points={},

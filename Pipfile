@@ -9,6 +9,6 @@ name = "pypi"
 
 [packages]
 
-toolz = "==0.9.0"
-addict = "==2.2.0"
+toolz = ">=0.9.0"
+addict = ">=2.2.0"
 

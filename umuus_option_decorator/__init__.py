@@ -61,8 +61,8 @@ __keywords__ = []
 __license__ = 'GPLv3'
 __scripts__ = []
 __install_requires__ = [
-    'toolz==0.9.0',
-    'addict==2.2.0',
+    'toolz>=0.9.0',
+    'addict>=2.2.0',
 ]
 __dependency_links__ = []
 __classifiers__ = []
