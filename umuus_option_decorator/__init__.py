@@ -51,6 +51,7 @@ GPLv3 <https://www.gnu.org/licenses/>
 import sys
 import functools
 import addict
+import toolz
 __version__ = '0.1'
 __url__ = 'https://github.com/junmakii/umuus-option-decorator'
 __author__ = 'Jun Makii'
