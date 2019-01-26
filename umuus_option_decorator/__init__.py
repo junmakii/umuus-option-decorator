@@ -62,7 +62,6 @@ License
 GPLv3 <https://www.gnu.org/licenses/>
 
 """
-import sys
 import functools
 import addict
 import toolz
@@ -131,7 +130,3 @@ def decorator(fn, **default_kw):
             raise err
 
     return wrapper
-
-
-if __name__ == '__main__':
-    sys.exit(main(sys.argv))
