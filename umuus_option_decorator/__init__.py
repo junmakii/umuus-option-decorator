@@ -33,32 +33,20 @@ Example
 
     >>> import umuus_option_decorator
 
-    @umuus_option_decorator.option_decorator()
-    def run(x, options):
-        assert x == options.x
+    >>> @umuus_option_decorator.decorator() 
+    ... def f(x, options): print(x, options)
 
-----
-
-    In [2]: @umuus_option_decorator.decorator() 
-       ...: def f(x): print(x)
-
-    In [3]: f(1)
-    1
-
-    In [4]: f(x=1)
-    1
-
-    In [5]: f(options=dict(x=1))
-    1
-
-    In [6]: @umuus_option_decorator.decorator() 
-       ...: def f(x, options): print(x, options)
-
-    In [7]: f(options=dict(x=1))
+    >>> f(1)
     1 {'x': 1}
 
-    In [8]: f(1)
-    1 {}
+    >>> f(x=1)
+    1 {'x': 1}
+
+    >>> f(options=dict(x=1))
+    1 {'x': 1}
+
+    >>> f(options={'x': 1})
+    1 {'x': 1}
 
 Authors
 -------
@@ -113,8 +101,10 @@ def decorator(fn, **default_kw):
     @functools.wraps(fn)
     def wrapper(*args, **kwargs):
         try:
+            _args = dict(zip(spec.args[:len(args)], args))
             _options = functools.reduce(lambda a, b: (a.update(b), a)[-1], (
                 default_kw,
+                _args,
                 kwargs,
                 kwargs.get('options', {}),
             ), addict.Dict())
@@ -123,8 +113,9 @@ def decorator(fn, **default_kw):
                     key: value
                     for key, value in (
                         [] + list(dict(options=_options).items()) +
-                        list(_options.items()))
-                    if key in (spec.args[len(args):]) or spec.varkw
+                        list(_options.items()) + list(_args.items()))
+                    if key in spec.args and key not in spec.args[:len(args)]
+                    or spec.varkw
                 })
         except Exception as err:
             raise err
