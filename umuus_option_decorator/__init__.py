@@ -83,7 +83,7 @@ __all__ = []
 
 
 @toolz.curry
-def option_decorator(fn, **default_kw):
+def decorator(fn, **default_kw):
     spec = inspect.getfullargspec(fn)
 
     @functools.wraps(fn)
